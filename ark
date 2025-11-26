@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARK - A Classic Neocities Site</title>
+    <!-- Add favicon -->
+    <link rel="icon" href="https://z-cdn-media.chatglm.cn/files/958d52f5-1e66-4d41-adaa-8fae417937e6_octupus%20logo.png?auth_key=1793282742-e95e96f3c2434de38fe756e55c0425ca-0-98a496c4a876d4e28fdc80a9a2d5e15a" type="image/png">
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /*
+        Colors and fonts carefully selected to match the "ARK" site aesthetic:
+        - Primary Purple: #6B4991 (Header/Navigation)
+        - Secondary Purple/Lavender: #C2A8D9 (Hover/Dropdown/Content Background)
+        - Main Background: #F2F2F7 (Very light lavender)
+        - Font: Serif for a classic, academic document look
+        */
+
+        :root {
+            --color-primary: #6B4991;
+            --color-secondary: #C2A8D9;
+            --color-bg-main: #F2F2F7;
+            --color-text-dark: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+        }
+
+        body {
+            background-color: var(--color-bg-main);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            color: var(--color-text-dark);
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header-bg {
+            background-color: var(--color-primary);
+        }
+
+        .light-purple-bar {
+            background-color: var(--color-secondary);
+            height: 8.4px;
+        }
+
+        .nav-link {
+            padding: 8px 20px;
+            background-color: var(--color-primary);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.1s;
+            font-size: 14px;
+        }
+
+        .nav-link:hover, .nav-active {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        .dotted-border-h {
+            border-top: 1px dotted var(--color-text-dark);
+            height: 1px;
+            margin: 10px 0;
+        }
+
+        .content-panel {
+            background-color: white;
+            padding: 1rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-primary);
+            z-index: 10;
+            min-width: 150px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+        .dropdown-menu a {
+            display: block;
+            padding: 6px 10px;
+            color: var(--color-text-dark);
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 14px;
+        }
+        .dropdown-menu a:hover {
+            background-color: #E0E0E6;
+        }
+
+        /* Account Dropdown Styles */
+        .account-dropdown {
+            position: relative;
+        }
+
+        .account-dropdown-menu {
+            position: absolute;
+            right: 0;
+            background-color: var(--color-secondary);
+            border: 1px solid var(--color-primary);
+            z-index: 10;
+            min-width: 150px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            display: none;
+            padding: 8px 0;
+        }
+
+        .account-dropdown:hover .account-dropdown-menu {
+            display: block;
+        }
+
+        .account-dropdown-menu a {
+            display: block;
+            padding: 12px 16px;
+            color: var(--color-text-dark);
+            margin: 4px 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .account-dropdown-menu a:hover {
+            background-color: #E0E0E6;
+        }
+
+        /* Profile Page Styles - Horizontal Layout */
+        .profile-sidebar {
+            background-color: var(--color-secondary);
+            padding: 0.5rem;
+            height: 100%;
+        }
+
+        .profile-sidebar-item {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 14px;
+        }
+
+        .profile-sidebar-item:hover {
+            background-color: #E0E0E6;
+        }
+
+        .profile-sidebar-item.active {
+            background-color: #B395D0;
+            font-weight: bold;
+        }
+
+        .profile-content {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--color-primary);
+        }
+
+        /* Edit Profile Styles */
+        .edit-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .edit-textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            min-height: 100px;
+            margin-bottom: 12px;
+            resize: vertical;
+            font-size: 14px;
+        }
+
+        .edit-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        /* Auth Modal Styles */
+        .auth-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .auth-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid var(--color-primary);
+        }
+
+        .auth-title {
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .auth-input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .auth-button {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background-color 0.2s;
+            font-size: 14px;
+        }
+
+        .auth-button:hover {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-primary);
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--color-primary);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            color: var(--color-primary);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .auth-tab.active {
+            background-color: var(--color-secondary);
+        }
+
+        .auth-tab-content {
+            display: none;
+        }
+
+        .auth-tab-content.active {
+            display: block;
+        }
+
+        .error-message {
+            color: #d32f2f;
+            font-size: 0.8rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .password-requirements {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-message {
+            color: #1976d2;
+            font-size: 0.7rem;
+            margin-top: -0.5rem;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Page visibility */
+        .page {
+            display: none;
+            flex: 1;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Profile Picture Change Button */
+        .change-pfp-btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            margin-top: 8px;
+        }
+
+        .change-pfp-btn:hover {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        /* Standard button style to match Post and Log out buttons */
+        .standard-btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.1s;
+            font-size: 14px;
+            border-radius: 0;
+        }
+
+        .standard-btn:hover {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        /* Conversations section styling */
+        .conversations-container {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .conversation-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+        }
+
+        .conversation-item:last-child {
+            border-bottom: none;
+        }
+
+        .conversation-username {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .conversation-content {
+            margin-bottom: 0.5rem;
+        }
+
+        .conversation-meta {
+            font-size: 0.8rem;
+            color: #666;
+            text-align: right;
+        }
+
+        /* New post section styling */
+        .new-post-container {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .post-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin-bottom: 12px;
+            font-size: 14px;
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* Dashboard section styling */
+        .dashboard-container {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .post-preview {
+            border: 1px solid #eee;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-meta {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+        }
+
+        /* Search Modal Styles */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid var(--color-primary);
+        }
+
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-title {
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-filter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-results {
+            margin-top: 1rem;
+        }
+
+        .search-result-item {
+            border: 1px solid #eee;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .search-result-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--color-primary);
+        }
+
+        .search-result-type {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-result-content {
+            margin-bottom: 0.5rem;
+        }
+
+        .search-result-meta {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        /* Full screen layout styles */
+        .main-container {
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex: 1;
+            width: 100%;
+            background-color: white;
+        }
+
+        /* Notification Bell Styles */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .notification-bell svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* Notification Modal Styles */
+        .notification-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .notification-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 2px solid var(--color-primary);
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .notification-title {
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .notification-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-item.unread {
+            background-color: #f0f8ff;
+        }
+
+        .notification-text {
+            margin-bottom: 0.5rem;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+
+        /* Chat Modal Styles */
+        .chat-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chat-content {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid var(--color-primary);
+        }
+
+        .chat-header {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 1rem;
+            border-radius: 6px 6px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .chat-input-container {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 14px;
+        }
+
+        .chat-send-btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.sent {
+            align-items: flex-end;
+        }
+
+        .message.received {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .message.sent .message-bubble {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        .message.received .message-bubble {
+            background-color: #f0f0f0;
+            color: black;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        /* Public Posts Section */
+        .public-posts-container {
+            background-color: white;
+            padding: 1rem;
+        }
+
+        .public-post-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+        }
+
+        .public-post-item:last-child {
+            border-bottom: none;
+        }
+
+        .public-post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .public-post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 2px solid var(--color-primary);
+        }
+
+        .public-post-info {
+            flex: 1;
+        }
+
+        .public-post-username {
+            font-weight: bold;
+            color: var(--color-primary);
+            cursor: pointer;
+        }
+
+        .public-post-date {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .public-post-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .public-post-content {
+            margin-bottom: 0.5rem;
+        }
+
+        .public-post-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 0.5rem;
+        }
+
+        .public-post-action {
+            font-size: 0.8rem;
+            color: #666;
+            cursor: pointer;
+        }
+
+        .public-post-action:hover {
+            color: var(--color-primary);
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 200;
+            overflow-y: auto;
+        }
+
+        .mobile-menu-content {
+            background-color: var(--color-primary);
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--color-secondary);
+        }
+
+        .mobile-menu-title {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .mobile-menu-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .mobile-nav-link {
+            display: block;
+            padding: 12px 0;
+            color: white;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        .mobile-nav-link:hover {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        .mobile-nav-link.active {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        .mobile-dropdown {
+            margin-left: 20px;
+        }
+
+        .mobile-dropdown-link {
+            display: block;
+            padding: 8px 0;
+            color: white;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        .mobile-dropdown-link:hover {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        .mobile-account-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-secondary);
+        }
+
+        .mobile-account-link {
+            display: block;
+            padding: 8px 0;
+            color: white;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        .mobile-account-link:hover {
+            background-color: var(--color-secondary);
+            color: black;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 1024px) {
+            .profile-info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .profile-picture {
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Header adjustments */
+            .header-bg {
+                flex-wrap: wrap;
+                padding: 8px;
+            }
+            
+            .header-bg .text-4xl {
+                font-size: 28px;
+            }
+            
+            .header-bg .flex.items-center.space-x-4 {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 8px;
+            }
+            
+            .header-bg .flex.items-center.space-x-4 .flex.items-center {
+                order: 2;
+            }
+            
+            .header-bg .flex.items-center.space-x-4 img {
+                order: 1;
+                width: 80px;
+                height: auto;
+            }
+            
+            /* Mobile menu toggle */
+            .mobile-menu-toggle {
+                display: block;
+                order: 3;
+            }
+            
+            /* Hide desktop navigation on mobile */
+            nav {
+                display: none;
+            }
+            
+            /* Content adjustments */
+            .grid.grid-cols-1.lg\\:grid-cols-3 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .grid.grid-cols-1.lg\\:grid-cols-4 {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .pr-6, .pl-6 {
+                padding-right: 1rem;
+                padding-left: 1rem;
+            }
+            
+            .border-r {
+                border-right: none;
+                border-bottom: 1px dotted var(--color-text-dark);
+                padding-bottom: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            /* Profile sidebar adjustments */
+            .profile-sidebar {
+                display: flex;
+                flex-wrap: wrap;
+                padding: 0.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .profile-sidebar-item {
+                flex: 1 0 50%;
+                padding: 8px;
+                margin-bottom: 5px;
+                text-align: center;
+            }
+            
+            /* Modal adjustments */
+            .auth-content, .search-content, .notification-content, .chat-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+            
+            .chat-content {
+                height: 90vh;
+            }
+            
+            /* Button adjustments */
+            .standard-btn {
+                padding: 10px 15px;
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            
+            .edit-buttons {
+                flex-direction: column;
+            }
+            
+            /* Form adjustments */
+            .edit-input, .edit-textarea, .post-input {
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Search adjustments */
+            .search-filters {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            /* Public posts adjustments */
+            .public-post-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .public-post-avatar {
+                margin-bottom: 10px;
+            }
+            
+            /* Post actions adjustments */
+            .post-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            /* Grid adjustments */
+            .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid.grid-cols-1.md\\:grid-cols-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Header adjustments for very small screens */
+            .header-bg .text-4xl {
+                font-size: 24px;
+            }
+            
+            .header-bg .flex.items-center.space-x-4 img {
+                width: 60px;
+            }
+            
+            /* Content adjustments */
+            .p-4.pt-6 {
+                padding: 1rem 0.5rem;
+            }
+            
+            /* Profile picture adjustments */
+            .profile-picture {
+                width: 80px;
+                height: 80px;
+            }
+            
+            /* Modal adjustments */
+            .auth-content, .search-content, .notification-content {
+                width: 98%;
+                padding: 1rem;
+            }
+            
+            /* Font size adjustments */
+            body {
+                font-size: 13px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Tablet specific adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            /* Two column layout for tablets */
+            .grid.grid-cols-1.lg\\:grid-cols-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .grid.grid-cols-1.lg\\:grid-cols-4 {
+                grid-template-columns: 1fr 3fr;
+            }
+            
+            /* Profile sidebar adjustments */
+            .profile-sidebar-item {
+                padding: 10px 12px;
+            }
+            
+            /* Modal adjustments */
+            .auth-content, .search-content, .notification-content {
+                width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu">
+        <div class="mobile-menu-content">
+            <div class="mobile-menu-header">
+                <div class="mobile-menu-title">ARK</div>
+                <button class="mobile-menu-close" onclick="toggleMobileMenu()">&times;</button>
+            </div>
+            
+            <a href="#" class="mobile-nav-link" onclick="showHomePage(event); toggleMobileMenu();">Home</a>
+            
+            <div class="mobile-nav-link" onclick="toggleMobileDropdown('browseDropdown')">
+                Browse
+                <svg class="inline-block ml-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div id="browseDropdown" class="mobile-dropdown" style="display: none;">
+                <a href="#" class="mobile-dropdown-link" onclick="showPublicPostsPage(event); toggleMobileMenu();">Public Posts</a>
+                <a href="#" class="mobile-dropdown-link" onclick="showBlogsPage(event); toggleMobileMenu();">Blogs</a>
+                <a href="#" class="mobile-dropdown-link" onclick="showIndexPage(event); toggleMobileMenu();">Index</a>
+                <a href="#" class="mobile-dropdown-link" onclick="showClustersPage(event); toggleMobileMenu();">Clusters</a>
+            </div>
+            
+            <div class="mobile-nav-link" onclick="toggleMobileDropdown('aboutDropdown')">
+                About
+                <svg class="inline-block ml-1 w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path>
+                </svg>
+            </div>
+            <div id="aboutDropdown" class="mobile-dropdown" style="display: none;">
+                <a href="#" class="mobile-dropdown-link" onclick="showVisionPage(event); toggleMobileMenu();">Our vision and mission</a>
+                <a href="#" class="mobile-dropdown-link" onclick="showContactPage(event); toggleMobileMenu();">Contact us</a>
+                <a href="#" class="mobile-dropdown-link" onclick="showFAQPage(event); toggleMobileMenu();">FAQs</a>
+                <a href="#" class="mobile-dropdown-link" onclick="showVolunteerPage(event); toggleMobileMenu();">Volunteer</a>
+            </div>
+            
+            <div class="mobile-account-section">
+                <a href="#" class="mobile-nav-link" id="mobileAccountLink" onclick="showProfilePage(event); toggleMobileMenu();">*Account*</a>
+                <a href="#" class="mobile-account-link" onclick="showPostPage(event); toggleMobileMenu();">Post</a>
+                <a href="#" class="mobile-account-link" id="mobileAuthLink" onclick="handleAuthClick(); toggleMobileMenu();">Log in</a>
+                
+                <div class="mt-4">
+                    <input type="text" id="mobileSearchInput" placeholder="Search..." class="w-full p-2 text-sm bg-white border border-gray-400 rounded">
+                    <button class="w-full mt-2 bg-gray-300 p-2 text-sm font-bold border border-gray-500 rounded hover:bg-gray-400" onclick="performMobileSearch()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="auth-modal">
+        <div class="auth-content">
+            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
+            
+            <div class="auth-tabs">
+                <div id="loginTab" class="auth-tab active" onclick="switchTab('login')">Login</div>
+                <div id="registerTab" class="auth-tab" onclick="switchTab('register')">Register</div>
+            </div>
+            
+            <!-- Login Form -->
+            <div id="loginContent" class="auth-tab-content active">
+                <h2 class="auth-title">Login to ARK</h2>
+                <input type="text" id="loginUsername" class="auth-input" placeholder="Username or Email">
+                <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
+                <div id="loginError" class="error-message"></div>
+                <button class="auth-button" onclick="performLogin()">Login</button>
+            </div>
+            
+            <!-- Register Form -->
+            <div id="registerContent" class="auth-tab-content">
+                <h2 class="auth-title">Create an Account</h2>
+                <input type="text" id="registerUsername" class="auth-input" placeholder="Username">
+                <input type="email" id="registerEmail" class="auth-input" placeholder="Email">
+                <div class="info-message">
+                    Only Gmail email addresses are approved for registration.
+                </div>
+                <input type="password" id="registerPassword" class="auth-input" placeholder="Password">
+                <div class="password-requirements">
+                    Password must be at least 8 characters with uppercase, lowercase, and numbers.
+                </div>
+                <input type="password" id="confirmPassword" class="auth-input" placeholder="Confirm Password">
+                <div id="registerError" class="error-message"></div>
+                <button class="auth-button" onclick="performRegister()">Register</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="search-modal">
+        <div class="search-content">
+            <div class="search-header">
+                <h2 class="search-title">Search</h2>
+                <span class="close-modal" onclick="closeSearchModal()">&times;</span>
+            </div>
+            
+            <div class="search-filters">
+                <div class="search-filter">
+                    <input type="radio" id="searchAll" name="searchFilter" value="all" checked>
+                    <label for="searchAll">All</label>
+                </div>
+                <div class="search-filter">
+                    <input type="radio" id="searchPosts" name="searchFilter" value="posts">
+                    <label for="searchPosts">Posts</label>
+                </div>
+                <div class="search-filter">
+                    <input type="radio" id="searchUsers" name="searchFilter" value="users">
+                    <label for="searchUsers">Users</label>
+                </div>
+            </div>
+            
+            <input type="text" id="searchInput" class="search-input" placeholder="Enter your search query..." onkeyup="performSearch(event)">
+            
+            <div id="searchResults" class="search-results">
+                <!-- Search results will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notificationModal" class="notification-modal">
+        <div class="notification-content">
+            <div class="notification-header">
+                <h2 class="notification-title">Notifications</h2>
+                <span class="close-modal" onclick="closeNotificationModal()">&times;</span>
+            </div>
+            
+            <div id="notificationList">
+                <!-- Notifications will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Modal -->
+    <div id="chatModal" class="chat-modal">
+        <div class="chat-content">
+            <div class="chat-header">
+                <div id="chatUsername">Username</div>
+                <span class="close-modal" onclick="closeChatModal()">&times;</span>
+            </div>
+            
+            <div id="chatMessages" class="chat-messages">
+                <!-- Chat messages will be displayed here -->
+            </div>
+            
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Type a message..." onkeyup="handleChatInput(event)">
+                <button class="chat-send-btn" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container - Full Screen -->
+    <div class="main-container">
+
+        <!-- Header: ARK Logo and Top Links -->
+        <header class="header-bg flex items-center justify-between p-2 relative">
+            
+            <!-- Logo Text -->
+            <div class="text-4xl font-serif font-bold text-white pl-4">ARK</div>
+
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+
+            <!-- Account Links & Search -->
+            <div class="flex items-center space-x-4 pr-4 text-sm font-semibold">
+                <!-- Notification Bell -->
+                <div id="notificationBell" class="notification-bell" onclick="openNotificationModal()" style="display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                    </svg>
+                    <div id="notificationBadge" class="notification-badge" style="display: none;">0</div>
+                </div>
+                
+                <!-- Account Dropdown -->
+                <div class="account-dropdown">
+                    <a href="#" id="accountLink" class="text-white hover:underline" onclick="showProfilePage(event)">*Account*</a>
+                    <div class="account-dropdown-menu">
+                        <a href="#" onclick="showSettingsPage(event)">Settings</a>
+                        <a href="#" onclick="showCertificatesPage(event)">Certificates</a>
+                        <a href="#" onclick="showAchievementsPage(event)">Achievments</a>
+                        <a href="#" onclick="showHistoryPage(event)">My history</a>
+                    </div>
+                </div>
+                <a href="#" class="text-white hover:underline" onclick="showPostPage(event)">Post</a>
+                <a href="#" id="authLink" class="text-white hover:underline cursor-pointer" onclick="handleAuthClick()">Log in</a>
+                
+                <input type="text" id="headerSearchInput" placeholder="" class="w-24 p-1 text-xs bg-white border border-gray-400" onkeyup="handleHeaderSearch(event)">
+                <button class="bg-gray-300 px-2 py-1 text-xs font-bold border border-gray-500 hover:bg-gray-400" onclick="openSearchModal()">Search</button>
+
+                <!-- Octopus Logo Image -->
+                <img src="https://z-cdn-media.chatglm.cn/files/958d52f5-1e66-4d41-adaa-8fae417937e6_octupus%20logo.png?auth_key=1793282742-e95e96f3c2434de38fe756e55c0425ca-0-98a496c4a876d4e28fdc80a9a2d5e15a" alt="Octopus Logo" class="w-36 h-25 object-contain">
+            </div>
+        </header>
+
+        <!-- Light Purple Bar Under Header -->
+        <div class="light-purple-bar"></div>
+
+        <!-- Main Navigation Bar -->
+        <nav class="flex text-sm relative">
+            <a href="#" class="nav-link nav-active" onclick="showHomePage(event)">Home</a>
+            
+            <!-- Browse Link with Dropdown -->
+            <div class="relative group">
+                <div id="browse-link" class="nav-link flex items-center">
+                    Browse
+                    <svg class="ml-1 w-3 h-3 transition-transform duration-200 group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                </div>
+                <div class="dropdown-menu group-hover:block transition-all duration-150">
+                    <a href="#" onclick="showPublicPostsPage(event)">Public Posts</a>
+                    <a href="#" onclick="showBlogsPage(event)">Blogs</a>
+                    <a href="#" onclick="showIndexPage(event)">Index</a>
+                    <a href="#" onclick="showClustersPage(event)">Clusters</a>
+                </div>
+            </div>
+
+            <!-- About Link with Dropdown -->
+            <div class="relative group">
+                <div id="about-link" class="nav-link flex items-center">
+                    About
+                    <svg class="ml-1 w-3 h-3 transition-transform duration-200 group-hover:rotate-180" fill="currentColor" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" fill-rule="evenodd"></path></svg>
+                </div>
+                <div class="dropdown-menu group-hover:block transition-all duration-150">
+                    <a href="#" onclick="showVisionPage(event)">Our vision and mission</a>
+                    <a href="#" onclick="showContactPage(event)">Contact us</a>
+                    <a href="#" onclick="showFAQPage(event)">FAQs</a>
+                    <a href="#" onclick="showVolunteerPage(event)">Volunteer</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content Wrapper - Full Width -->
+        <div class="content-wrapper">
+
+            <!-- Home Page Content -->
+            <div id="homePage" class="page active">
+                <!-- Main Content Grid (Two Columns) -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-0 p-4 pt-6 bg-white">
+                    
+                    <!-- Left Column: Discovery and News -->
+                    <div class="lg:col-span-1 pr-6 border-r border-dashed border-gray-400 mb-6 lg:mb-0">
+                        
+                        <h2 class="text-xl font-bold font-serif mb-4 text-purple-800">Discover what intrigues you</h2>
+                        
+                        <p class="text-xs italic mb-4">
+                            Peruse subjects via media or star up to 10 intrests to have them listed below
+                        </p>
+
+                        <!-- Interest Grid -->
+                        <div class="grid grid-cols-2 gap-y-2 text-sm">
+                            <div><span class="text-red-500 mr-1">★</span> All subjects</div>
+                            <div><span class="text-red-500 mr-1">★</span> Sports</div>
+                            <div><span class="text-red-500 mr-1">★</span> Art & Theatre</div>
+                            <div><span class="text-red-500 mr-1">★</span> Humanities</div>
+                            <div><span class="text-red-500 mr-1">★</span> Music</div>
+                            <div><span class="text-red-500 mr-1">★</span> School-Taught</div>
+                            <div><span class="text-red-500 mr-1">★</span> History</div>
+                            <div><span class="text-red-500 mr-1">★</span> Culinary</div>
+                            <div><span class="text-red-500 mr-1">★</span> Literature</div>
+                            <div><span class="text-red-500 mr-1">★</span> Uncategoriable/Niche</div>
+                        </div>
+
+                        <div class="dotted-border-h mt-6"></div>
+
+                        <!-- News Section -->
+                        <div class="mt-6">
+                            <div class="flex justify-between items-end mb-2">
+                                <h3 class="text-xl font-bold font-serif text-purple-800">News</h3>
+                                <a href="#" class="text-xs text-gray-500 hover:text-blue-500 underline">All news</a>
+                            </div>
+                            
+                            <!-- Latest News -->
+                            <p id="newsTitle" class="font-bold mb-1">The Latest News We Have for Everyone!</p>
+                            <p id="newsContent" class="text-sm leading-snug">
+                                This is a preview of the channel we use to update everyone of the latest news we have to offer. Users who are <span class="font-bold italic">signed up</span> may sometimes be privy to more personal news, as well as be invited to some events that may be exclusive.
+                            </p>
+                            <div class="text-right text-xs mt-1"><a href="#" class="text-blue-600 hover:underline underline">Read more</a></div>
+                            
+                            <div class="dotted-border-h"></div>
+
+                            <!-- More News -->
+                            <p class="font-bold mb-1">More News or Something:</p>
+                            <p class="text-sm leading-snug">
+                                The more you scroll down the older news will be. If there is something more pressing than a new update, then it will be pinned in the "All news" page. However, the news on the Home page, as it is here, will always only have the latest information.
+                            </p>
+                            <div class="text-right text-xs mt-1"><a href="#" class="text-blue-600 hover:underline underline">Read more</a></div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Main Content -->
+                    <div class="lg:col-span-2 pl-6">
+
+                        <!-- Our Purpose(s) Section -->
+                        <div id="ourPurposeSection" class="mb-8">
+                            <h2 class="text-xl font-bold font-serif mb-4 text-purple-800">Our purpose(s):</h2>
+
+                            <div class="text-sm space-y-4">
+                                <p><span class="font-bold">The Whole Point:</span> We believe that education is an (if not the most) important factors in a persons life. Unfortunately, education is sometimes restricted due to some parties not being able to afford it. This site is aiming for the chance to give students of all ages a platform to learn as much their heart desires, while using a barter system as a currency. Knowledge in exchange for knowledge.</p>
+                                <p><span class="font-bold">The most user-interactive part:</span> Users can have discussions between them and their personal community under their profile, and discussions with the public under clusters, in the form of blogs. (Blogs are divided in an orderly fashion depending on things such as subject, level, nature, etc...)</p>
+                                <p><span class="font-bold">Academics:</span> We also offer free courses for users on a variety of topics, which, after completing with an 80% or above, earns them a statement of completion/participation (depending on the nature of the course.) Want to participate in a <span class="underline">fundraiser</span> for a good cause, or to <span class="underline">volunteer</span> in your community, but not sure where to start? We can help with that too.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="dotted-border-h"></div>
+
+                        <!-- LFB (Latest Fascinating Blogs) Section -->
+                        <div class="mt-6">
+                            <div class="flex justify-between items-end mb-2">
+                                <h3 class="text-xl font-bold font-serif text-purple-800">LFB <span class="text-xs text-gray-500 font-normal italic">Latest Fascinating Blogs</span></h3>
+                                <a href="#" class="text-xs text-gray-500 hover:text-blue-500 underline">All Blogs</a>
+                            </div>
+                            
+                            <!-- Blog Post 1 -->
+                            <p class="font-bold mb-1">This is the Title of the Latest Blog Everyone is Talking About!</p>
+                            <p class="text-sm leading-snug mb-4">
+                                Well, to be fair, "Everyone is talking about" would be subjective - considering that once you spend more time tailoring your profile it would just be the latest blog from whoever you're subscribed to/following/starred... you get the idea. Once you click on the "Read more" button you will be able to read the rest of what it is written since this is just a preview, as well as others comments/thoughts, if they choose to share them. You would also be able to see...
+                                <span class="text-right text-xs mt-1 block"><a href="#" class="text-blue-600 hover:underline underline">[Read more]</a></span>
+                            </p>
+
+                            <!-- Blog Post 2 -->
+                            <p class="font-bold mb-1">This is the next thing... or is it?</p>
+                            <p class="text-sm leading-snug mb-4">
+                                You get the idea by now don't you? Getting the bigger picture? Yes? No? Maybe? We're going to assume that you said maybe on the off-chance that we're not making ourselves clear, perchance, allow us to re-explain...
+                                <span class="text-right text-xs mt-1 block"><a href="#" class="text-blue-600 hover:underline underline">[Read more]</a></span>
+                            </p>
+
+                            <!-- Blog Post 3 -->
+                            <p class="font-bold mb-1">You Still Think About me, and we all Know it.</p>
+                            <p class="text-sm leading-snug">
+                                Now people, especially within this new generation, LOVE to pride themselves on the fact that they just let life pass around them (lmao as if that a good thing) think about the "Let them" mentality, or even the more famous "It is what it is" line that everyone always references, when in reality, humans cling to every comfort that they can get, whether it be in making a recipe your grandmother kept for you or the dead wife that haunts the narrative in ur fav movie, or the fact that the Harry Potter books had a space on the NYT bestseller for almost ten years (yikes can you imagine?)...
+                                <span class="text-right text-xs mt-1 block"><a href="#" class="text-blue-600 hover:underline underline">[Read more]</a></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Public Posts Page Content -->
+            <div id="publicPostsPage" class="page">
+                <div class="public-posts-container">
+                    <h2 class="text-2xl font-bold mb-6 text-purple-800">Public Posts</h2>
+                    
+                    <div id="publicPostsList">
+                        <!-- Public posts will be displayed here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other User Profile Page Content -->
+            <div id="otherUserProfilePage" class="page">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-0 p-4 pt-6 bg-white">
+                    <!-- Left Sidebar -->
+                    <div class="lg:col-span-1 pr-6 border-r border-dashed border-gray-400">
+                        <div class="profile-sidebar">
+                            <h3 class="text-lg font-bold mb-4">Profile</h3>
+                            <div class="profile-sidebar-item active" onclick="showOtherProfileSection('profile')">Profile</div>
+                            <div class="profile-sidebar-item" onclick="showOtherProfileSection('posts')">Posts</div>
+                            <div class="profile-sidebar-item" onclick="showOtherProfileSection('blogs')">Blogs</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Content Area -->
+                    <div class="lg:col-span-3 pl-6">
+                        <!-- Profile Section -->
+                        <div id="otherProfileSection" class="profile-section">
+                            <div class="profile-content">
+                                <h2 class="text-2xl font-bold mb-6 text-purple-800">User Profile</h2>
+                                
+                                <!-- Horizontal Profile Layout -->
+                                <div class="profile-info-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Left Column -->
+                                    <div>
+                                        <!-- Profile Picture -->
+                                        <div class="flex justify-center mb-4">
+                                            <img id="otherProfilePictureDisplay" src="https://z-cdn-media.chatglm.cn/files/958d52f5-1e66-4d41-adaa-8fae417937e6_octupus%20logo.png?auth_key=1793282742-e95e96f3c2434de38fe756e55c0425ca-0-98a496c4a876d4e28fdc80a9a2d5e15a" alt="Profile Picture" class="profile-picture">
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h3 class="text-lg font-semibold mb-2">Username</h3>
+                                            <p id="otherProfileUsername" class="text-gray-700">Username</p>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h3 class="text-lg font-semibold mb-2">Pronouns</h3>
+                                            <p id="otherProfilePronouns" class="text-gray-700">(pronouns/here)</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Right Column -->
+                                    <div>
+                                        <div class="mb-4">
+                                            <h3 class="text-lg font-semibold mb-2">Biography</h3>
+                                            <p id="otherProfileBiography" class="text-gray-700">This is where you can write about yourself, your interests, and what makes you unique. Share your story with the community!</p>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h3 class="text-lg font-semibold mb-2">Aspirations</h3>
+                                            <p id="otherProfileAspirations" class="text-gray-700">My aspirations for this community include sharing knowledge, learning from others, and contributing to meaningful discussions that benefit everyone.</p>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <button id="followButton" class="standard-btn" onclick="handleFollow()">Follow</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Posts Section (Hidden by default) -->
+                        <div id="otherPostsSection" class="profile-section" style="display: none;">
+                            <div class="dashboard-container">
+                                <h2 class="text-2xl font-bold mb-6 text-purple-800">Posts</h2>
+                                
+                                <div id="otherUserPosts">
+                                    <!-- User posts will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Blogs Section (Hidden by default) -->
+                        <div id="otherBlogsSection" class="profile-section" style="display: none;">
+                            <div class="profile-content">
+                                <h2 class="text-2xl font-bold mb-6 text-purple-800">Blogs</h2>
+                                
+                                <div id="otherUserBlogs">
+                                    <!-- User blogs will be displayed here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Page Content - Horizontal Layout -->
+            <div id="profilePage" class="page">
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-0 p-4 pt-6 bg-white">
+                    <!-- Left Sidebar -->
+                    <div class="lg:col-span-1 pr-6 border-r border-dashed border-gray-400">
+                        <div class="profile-sidebar">
+                            <h3 class="text-lg font-bold mb-4">Profile</h3>
+                            <div class="profile-sidebar-item active" onclick="showProfileSection('profile')">Profile</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('discussions')">Discussions</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('posts')">Posts (5)</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('stars')">Stars (12)</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('clusters')">Clusters</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('blogs')">Blogs (3)</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('drafts')">Drafts (2)</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('notes')">Notes</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('exchanges')">Exchanges</div>
+                            <div class="profile-sidebar-item" onclick="showProfileSection('messages')">Messages (4)</div>
+                        </div>
+                    </div>
+
+                    <!-- Right Content Area -->
+                    <div class="lg:col-span-3 pl-6">
+                        <!-- Profile Section - Horizontal Layout -->
+                        <div id="profileSection" class="profile-section">
+                            <div class="profile-content">
+                                <h2 class="text-2xl font-bold mb-6 text-purple-800">User Profile</h2>
+                                
+                                <!-- Horizontal Profile Layout -->
+                                <div class="profile-info-grid grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Left Column -->
+                                    <div>
+                                        <!-- Profile Picture -->
+                                        <div class="flex justify-center mb-4">
+                                            <img id="profilePictureDisplay" src="https://z-cdn-media.chatglm.cn/files/958d52f5-1e66-4d41-adaa-8fae417937e6_octupus%20logo.png?auth_key=1793282742-e95e96f3c2434de38fe756e55c0425ca-0-98a496c4a876d4e28fdc80a9a2d5e15a" alt="Profile Picture" class="profile-picture">
+                                        </div>
+                                        
+                                        <!-- View Mode -->
+                                        <div id="viewProfileInfo">
+                                            <div class="mb-4">
+                                                <h3 class="text-lg font-semibold mb-2">Username</h3>
+                                                <p id="profileUsername" class="text-gray-700">Yan</p>
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <h3 class="text-lg font-semibold mb-2">Email</h3>
+                                                <p id="profileEmail" class="text-gray-700">yan@example.com</p>
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <h3 class="text-lg font-semibold mb-2">Pronouns</h3>
+                                                <p id="profilePronouns" class="text-gray-700">(pronouns/here)</p>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Edit Mode -->
+                                        <div id="editProfileInfo" style="display: none;">
+                                            <div class="mb-4">
+                                                <h3 class="text-lg font-semibold mb-2">Username</h3>
+                                                <input type="text" id="editUsername" class="edit-input" placeholder="Enter your username">
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <h3 class="text-lg font-semibold mb-2">Email</h3>
+                                                <input type="email" id="editEmail" class="edit-input" placeholder="Enter your email">
+                                            </div>
+                                            
+                                            <div class="mb-4">
+                                                <h3 class="text-lg font-semibold mb-2">Pronouns</h3>
+                                                <input type="text" id="editPronouns" class="edit-i
